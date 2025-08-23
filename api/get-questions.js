@@ -4,7 +4,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 // 要从题库中随机抽取多少个问题
 const QUESTION_COUNT = 4;
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     try {
         const doc = new GoogleSpreadsheet('1-LOLMJf3sMRexlGUSN8JsG6owCKag9S80KA1OZzbd1E'); // 再次替换成你的 Sheet ID
 

@@ -65,6 +65,7 @@ layout: page
             let formHTML = '';
             questions.forEach((question, index) => {
                 // 为每个题目创建一个 <fieldset>
+                console.log(question);
                 formHTML += `<fieldset>`;
                 formHTML += `<legend>汇报 ${index + 1}：${question['本周汇报和下周计划']} (题号: ${question.id})</legend>`;
                 
