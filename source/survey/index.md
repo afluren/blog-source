@@ -64,6 +64,14 @@ layout: page
             planning: '规划性',
             criticality: '批判性思考'
         };
+        function escapeHTML(str) {
+            if (str === null || str === undefined) {
+                return '';
+            }
+            const p = document.createElement('p');
+            p.textContent = str;
+            return p.innerHTML;
+        }
 
         // 1. 获取并渲染问题的函数 (不变)
         async function initializeSurvey() {
@@ -93,8 +101,8 @@ layout: page
                 // 为每个题目创建一个 <fieldset>
                 console.log(question);
                 formHTML += `<fieldset>`;
-                formHTML += `<legend>汇报 ${index + 1} 选题：${question.title} (题号: ${question.id})</legend>`;
-                formHTML += `<p>${question.text}</p>`;
+                formHTML += `<legend>汇报 ${index + 1} 选题：${escapeHTML(question.title)} (题号: ${escapeHTML(question.id)})</legend>`;
+                formHTML += `<p>${escapeHTML(question.text)}</p>`;
                 
                 // 存储题号
                 formHTML += `<input type="hidden" name="topic_${index}_id" value="${question.id}">`;
