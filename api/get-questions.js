@@ -22,8 +22,9 @@ module.exports = async function handler(req, res) {
         // 读取所有行
         const rows = await sheet.getRows();
         const allQuestions = rows.map(row => ({
-            id: row.ID,
-            text: row.QuestionText
+            id: row.id,
+            text: row.本周汇报和下周计划,
+            title: row.选题内容,
         }));
 
         // --- 核心随机抽取逻辑 ---

@@ -67,7 +67,7 @@ layout: page
                 // 为每个题目创建一个 <fieldset>
                 console.log(question);
                 formHTML += `<fieldset>`;
-                formHTML += `<legend>汇报 ${index + 1}：${question['本周汇报和下周计划']} (题号: ${question.id})</legend>`;
+                formHTML += `<legend>汇报 ${index + 1}：${question.text} (题号: ${question.id})</legend>`;
                 
                 // 存储题号
                 formHTML += `<input type="hidden" name="topic_${index}_id" value="${question.id}">`;
