@@ -80,10 +80,10 @@ layout: page
                 if (!response.ok) throw new Error('无法从服务器获取题目');
                 questionsData = await response.json();
                 
-                if (!questionsData || questionsData.length !== 4) {
-                    loadingMessage.innerText = `错误：需要4个题目，但实际获取到 ${questionsData.length} 个。请检查题库数量。`;
-                    return;
-                }
+                // if (!questionsData || questionsData.length !== 4) {
+                //     loadingMessage.innerText = `错误：需要4个题目，但实际获取到 ${questionsData.length} 个。请检查题库数量。`;
+                //     return;
+                // }
 
                 renderForm(questionsData);
                 loadingMessage.style.display = 'none';
