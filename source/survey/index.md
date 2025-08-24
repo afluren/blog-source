@@ -46,6 +46,7 @@ layout: page
     .rating-group label { flex-basis: 30%; }
     .rating-group .options { flex-basis: 70%; text-align: right; }
     .rating-group input[type="radio"] { margin: 0 5px; }
+    .question-text {white-space: pre-wrap;}
 </style>
 
 <script>
@@ -102,7 +103,7 @@ layout: page
                 console.log(question);
                 formHTML += `<fieldset>`;
                 formHTML += `<legend>汇报 ${index + 1} 选题：${escapeHTML(question.title)} (题号: ${escapeHTML(question.id)})</legend>`;
-                formHTML += `<p>${escapeHTML(question.text)}</p>`;
+                formHTML += `<p class="question-text">${escapeHTML(question.text)}</p>`;
                 
                 // 存储题号
                 formHTML += `<input type="hidden" name="topic_${index}_id" value="${question.id}">`;
