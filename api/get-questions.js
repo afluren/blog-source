@@ -2,7 +2,7 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 // 要从题库中随机抽取多少个问题
-const QUESTION_COUNT = 2287;
+const QUESTION_COUNT = 100;
 
 module.exports = async function handler(req, res) {
     try {
