@@ -47,6 +47,13 @@ layout: page
     .question-text {white-space: pre-wrap;}
     #submit-btn { background-color: #4CAF50; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px; }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" ...>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" ...></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" ...></script>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -86,6 +93,33 @@ layout: page
                 }
 
                 renderForm(questionsData);
+                // 1. 找到所有需要渲染 Markdown 的容器
+                const contentBlocks = document.querySelectorAll('.markdown-content');
+
+                // 2. 遍历并处理每一个容器
+                contentBlocks.forEach(block => {
+                    // 获取原始的、未被转义的 Markdown 文本
+                    // 注意：这里用 innerHTML 是因为原始文本可能包含换行等，textContent 会丢失这些格式
+                    const markdownText = block.innerHTML; 
+
+                    // 使用 Marked.js 将 Markdown 转换成原始 HTML
+                    const rawHtml = marked.parse(markdownText);
+
+                    // 使用 DOMPurify 对 HTML 进行安全净化
+                    const cleanHtml = DOMPurify.sanitize(rawHtml);
+
+                    // 将净化后的、可安全显示的 HTML 放回容器中
+                    block.innerHTML = cleanHtml;
+                });
+
+                // 3. 对整个表单进行一次数学公式渲染
+                // KaTeX 会自动寻找并渲染所有符合条件的公式
+                renderMathInElement(form, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                    ]
+                });
                 loadingMessage.style.display = 'none';
                 form.style.display = 'block';
             } catch (error) {
@@ -102,7 +136,8 @@ layout: page
                 console.log(question);
                 formHTML += `<fieldset>`;
                 formHTML += `<legend>汇报 ${index + 1} 选题：${escapeHTML(question.title)} (题号: ${escapeHTML(question.id)})</legend>`;
-                formHTML += `<p class="question-text">${escapeHTML(question.text)}</p>`;
+                // formHTML += `<p class="question-text">${escapeHTML(question.text)}</p>`;
+                formHTML += `<div class="markdown-content">${question.text}</div>`;
                 formHTML += `<p>请对以上汇报进行评分，分值为1-5，<b>1代表很拉垮，2代表 有点拉胯，3代表中，4代表良，5代表优秀</b>。</p>`;
                 
                 // 存储题号
