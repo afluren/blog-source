@@ -36,10 +36,10 @@ module.exports = async function handler(req, res) {
         }
 
         // 从打乱后的数组中选取前 N 个问题
-        const selectedQuestions = shuffled.slice(0, QUESTION_COUNT - 1);
+        const selectedQuestions = shuffled.slice(0, QUESTION_COUNT);
 
-        let special = shuffled.filter(q => q.id == 270);
-        selectedQuestions.push(special[0]); // 手动添加一个特殊问题
+        // let special = shuffled.filter(q => q.id == 270);
+        // selectedQuestions.push(special[0]); // 手动添加一个特殊问题
 
         // 将随机选取的问题作为 JSON 发送给前端
         res.status(200).json(selectedQuestions);
