@@ -103,7 +103,7 @@ layout: page
                 formHTML += `<fieldset>`;
                 formHTML += `<legend>汇报 ${index + 1} 选题：${escapeHTML(question.title)} (题号: ${escapeHTML(question.id)})</legend>`;
                 formHTML += `<p class="question-text">${escapeHTML(question.text)}</p>`;
-                fromHTML += `<p>请对以上题目进行评分，分值为1-5，1代表非常不符合，2代表比较不符合，3代表一般，4代表比较符合，5代表非常符合。</p>`;
+                formHTML += `<p>请对以上题目进行评分，分值为1-5，1代表非常不符合，2代表比较不符合，3代表一般，4代表比较符合，5代表非常符合。</p>`;
                 
                 // 存储题号
                 formHTML += `<input type="hidden" name="topic_${index}_id" value="${question.id}">`;
