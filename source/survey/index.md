@@ -93,33 +93,41 @@ layout: page
                 }
 
                 renderForm(questionsData);
-                // 1. 找到所有需要渲染 Markdown 的容器
-                const contentBlocks = document.querySelectorAll('.markdown-content');
+                       // --- 新的、手动的渲染逻辑 ---
+        const contentBlocks = document.querySelectorAll('.markdown-content');
 
-                // 2. 遍历并处理每一个容器
-                contentBlocks.forEach(block => {
-                    // 获取原始的、未被转义的 Markdown 文本
-                    // 注意：这里用 innerHTML 是因为原始文本可能包含换行等，textContent 会丢失这些格式
-                    const markdownText = block.innerHTML; 
+        contentBlocks.forEach(block => {
+            let markdownText = block.innerHTML;
+            let rawHtml = marked.parse(markdownText);
+            let cleanHtml = DOMPurify.sanitize(rawHtml);
 
-                    // 使用 Marked.js 将 Markdown 转换成原始 HTML
-                    const rawHtml = marked.parse(markdownText);
+            // --- 手动渲染 KaTeX ---
+            // 1. 渲染行间公式 $$...$$ 和 \\[...\\]
+            cleanHtml = cleanHtml.replace(/\$\$([\s\S]*?)\$\$|\\\[([\s\S]*?)\\\]/g, (match, p1, p2) => {
+                const math = p1 || p2;
+                try {
+                    return katex.renderToString(math, { displayMode: true, throwOnError: false });
+                } catch (e) {
+                    return match; // 渲染失败则返回原文
+                }
+            });
 
-                    // 使用 DOMPurify 对 HTML 进行安全净化
-                    const cleanHtml = DOMPurify.sanitize(rawHtml);
+            // 2. 渲染行内公式 $...$ 和 \\(...\\)
+            cleanHtml = cleanHtml.replace(/\$([\s\S]+?)\$|\\\(([\s\S]*?)\\\)/g, (match, p1, p2) => {
+                const math = p1 || p2;
+                // 避免贪婪匹配到 $$
+                if (match.startsWith('$$') && match.endsWith('$$')) {
+                    return match;
+                }
+                try {
+                    return katex.renderToString(math, { displayMode: false, throwOnError: false });
+                } catch (e) {
+                    return match; // 渲染失败则返回原文
+                }
+            });
 
-                    // 将净化后的、可安全显示的 HTML 放回容器中
-                    block.innerHTML = cleanHtml;
-                });
-
-                // 3. 对整个表单进行一次数学公式渲染
-                // KaTeX 会自动寻找并渲染所有符合条件的公式
-                renderMathInElement(form, {
-                    delimiters: [
-                        {left: '$$', right: '$$', display: true},
-                        {left: '$', right: '$', display: false},
-                    ]
-                });
+            block.innerHTML = cleanHtml;
+        });
                 loadingMessage.style.display = 'none';
                 form.style.display = 'block';
             } catch (error) {
