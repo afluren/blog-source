@@ -44,16 +44,9 @@ layout: page
     .rating-group label { flex-basis: 30%; }
     .rating-group .options { flex-basis: 70%; text-align: right; }
     .rating-group input[type="radio"] { margin: 0 5px; }
-    .markdown-content {white-space: pre-wrap;}
+    .question-text {white-space: pre-wrap;}
     #submit-btn { background-color: #4CAF50; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px; }
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -93,41 +86,6 @@ layout: page
                 }
 
                 renderForm(questionsData);
-                       // --- 新的、手动的渲染逻辑 ---
-        const contentBlocks = document.querySelectorAll('.markdown-content');
-
-        contentBlocks.forEach(block => {
-            let markdownText = block.innerHTML;
-            let rawHtml = marked.parse(markdownText);
-            let cleanHtml = DOMPurify.sanitize(rawHtml);
-
-            // --- 手动渲染 KaTeX ---
-            // 1. 渲染行间公式 $$...$$ 和 \\[...\\]
-            cleanHtml = cleanHtml.replace(/\$\$([\s\S]*?)\$\$|\\\[([\s\S]*?)\\\]/g, (match, p1, p2) => {
-                const math = p1 || p2;
-                try {
-                    return katex.renderToString(math, { displayMode: true, throwOnError: false });
-                } catch (e) {
-                    return match; // 渲染失败则返回原文
-                }
-            });
-
-            // 2. 渲染行内公式 $...$ 和 \\(...\\)
-            cleanHtml = cleanHtml.replace(/\$([\s\S]+?)\$|\\\(([\s\S]*?)\\\)/g, (match, p1, p2) => {
-                const math = p1 || p2;
-                // 避免贪婪匹配到 $$
-                if (match.startsWith('$$') && match.endsWith('$$')) {
-                    return match;
-                }
-                try {
-                    return katex.renderToString(math, { displayMode: false, throwOnError: false });
-                } catch (e) {
-                    return match; // 渲染失败则返回原文
-                }
-            });
-
-            block.innerHTML = cleanHtml;
-        });
                 loadingMessage.style.display = 'none';
                 form.style.display = 'block';
             } catch (error) {
@@ -144,8 +102,7 @@ layout: page
                 console.log(question);
                 formHTML += `<fieldset>`;
                 formHTML += `<legend>汇报 ${index + 1} 选题：${escapeHTML(question.title)} (题号: ${escapeHTML(question.id)})</legend>`;
-                // formHTML += `<p class="question-text">${escapeHTML(question.text)}</p>`;
-                formHTML += `<div class="markdown-content">${question.text}</div>`;
+                formHTML += `<p class="question-text">${escapeHTML(question.text)}</p>`;
                 formHTML += `<p>请对以上汇报进行评分，分值为1-5，<b>1代表很拉垮，2代表 有点拉胯，3代表中，4代表良，5代表优秀</b>。</p>`;
                 
                 // 存储题号
