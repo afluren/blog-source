@@ -117,7 +117,7 @@ layout: page
                 renderMathInElement(form, {
                     delimiters: [
                         {left: '$$', right: '$$', display: true},
-                        // {left: '$', right: '$', display: true},
+                        {left: '$', right: '$', display: true},
                     ]
                 });
                 loadingMessage.style.display = 'none';
